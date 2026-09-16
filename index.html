@@ -248,12 +248,12 @@
         list.innerHTML = data.filter(i => i.type === "file").map(item => `
           <li>
             <div class="file-meta">
-              <span>📄</span>
+              <span>📁</span>
               <span class="file-name">${item.name}</span>
               <span class="badge">${item.name.split('.').pop()}</span>
             </div>
             <div class="actions">
-              <button class="btn btn-edit" onclick='launchStudio(${JSON.stringify(item)})'>✏️ Open / Edit & Run</button>
+              <button class="btn btn-edit" onclick='launchStudio(${JSON.stringify(item)})'> Open / Edit & Run</button>
             </div>
           </li>
         `).join('');
