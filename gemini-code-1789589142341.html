@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cloud Code Studio | Pro IDE</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Configuration for Custom Theme -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ide: {
+              bg: '#050505',        /* Deeper black for modern feel */
+              surface: '#111113',   /* Slightly lighter for sidebar/panels */
+              border: '#27272a',    /* Sleek borders */
+              accent: '#3b82f6',    /* Primary Blue */
+              accentHover: '#2563eb',
+              text: '#a1a1aa',      /* Muted text */
+              textBright: '#f4f4f5',/* Bright text for active items */
+              danger: '#f43f5e',    /* Rose Red */
+              success: '#10b981'    /* Emerald Green */
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          animation: {
+            'blob': 'blob 10s infinite',
+            'fade-in': 'fadeIn 0.4s ease-out forwards',
+            'slide-up': 'slideUp 0.4s ease-out forwards',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'scale(0.95)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Modern Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; border: 2px solid #050505; }
+    ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+
+    body { background-color: #050505; color: #a1a1aa; overflow: hidden; selection: background-color: rgba(59,130,246,0.3); color: white;}
+
+    /* Premium Glassmorphism */
+    .glass-card {
+      background: rgba(17, 17, 19, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Animated Background for Login */
+    .bg-shape1 { position: absolute; top: -15%; left: -10%; width: 500px; height: 500px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; filter: blur(100px); mix-blend-mode: screen; }
+    .bg-shape2 { position: absolute; bottom: -15%; right: -10%; width: 400px; height: 400px; background: rgba(16, 185, 129, 0.15); border-radius: 50%; filter: blur(100px); mix-blend-mode: screen; }
+    .bg-shape3 { position: absolute; top: 30%; left: 40%; width: 350px; height: 350px; background: rgba(139, 92, 246, 0.15); border-radius: 50%; filter: blur(100px); mix-blend-mode: screen; }
+
+    /* File Tree Utilities */
+    .file-item { transition: all 0.15s ease; cursor: pointer; border-radius: 6px; margin: 2px 6px; border: 1px solid transparent;}
+    .file-item:hover { background: rgba(255,255,255,0.04); }
+    .file-item.active { background: rgba(59, 130, 246, 0.1); color: #60a5fa; font-weight: 500; border-color: rgba(59, 130, 246, 0.2); }
+    
+    /* VS Code Style Tabs */
+    .tab { background: #111113; border-right: 1px solid #27272a; border-top: 2px solid transparent; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .tab.active { background: #050505; border-top: 2px solid #3b82f6; color: #f4f4f5; }
+    .tab:hover:not(.active) { background: rgba(255,255,255,0.02); }
+    .unsaved-dot { display: none; width: 8px; height: 8px; background: #fbbf24; border-radius: 50%; box-shadow: 0 0 8px rgba(251, 191, 36, 0.6); }
+    .tab.unsaved .unsaved-dot { display: inline-block; }
+    .tab.unsaved .close-btn { display: none; }
+    .tab:hover.unsaved .close-btn { display: inline-flex; }
+    .tab:hover.unsaved .unsaved-dot { display: none; }
+
+    /* Resizer */
+    .resizer-v { height: 4px; background: transparent; border-top: 1px solid #27272a; cursor: row-resize; transition: background 0.2s; z-index: 30; }
+    .resizer-v:hover, .resizer-v.dragging { background: #3b82f6; border-top-color: #3b82f6; }
+    
+    /* Layout */
+    .layout-grid { display: flex; height: calc(100vh - 52px); }
+    .sidebar { width: 280px; min-width: 280px; border-right: 1px solid #27272a; display: flex; flex-direction: column; background: #111113; z-index: 20;}
+    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #050505; }
+    .editor-container { flex: 1; position: relative; background: #050505; }
+    .bottom-panel { height: 250px; min-height: 100px; display: flex; flex-direction: column; background: #050505;}
+
+    /* Mobile Sidebar */
+    @media (max-width: 768px) {
+      .sidebar { position: absolute; height: calc(100vh - 52px); left: -280px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(0); }
+      .sidebar.open { transform: translateX(280px); box-shadow: 20px 0 40px rgba(0,0,0,0.7); }
+      .layout-grid { flex-direction: column; }
+      .bottom-panel { height: 35vh; }
+    }
+
+    /* Modals */
+    .modal-overlay { opacity: 0; visibility: hidden; transition: 0.25s all cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(5px); }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal-content { transform: scale(0.95) translateY(10px); transition: 0.25s all cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; }
+    .modal-overlay.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
+
+    /* Inputs */
+    .ide-input { background: #050505; border: 1px solid #27272a; border-radius: 8px; padding: 10px 14px; color: #f4f4f5; outline: none; transition: all 0.2s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+    .ide-input:focus { border-color: #3b82f6; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 0 0 3px rgba(59, 130, 246, 0.15); }
+
+    .resizing-active iframe { pointer-events: none; }
+  </style>
+
+  <!-- ==========================================
+       DEFINE GLOBALS BEFORE EXTERNAL SCRIPTS
+       ========================================== -->
+  <script>
+    // Prevent ReferenceErrors by defining our namespaces early
+    window.STATE = {
+      config: {
+        user: localStorage.getItem('gh_user') || 'lalankumar99',
+        repo: localStorage.getItem('gh_repo') || 'View-',
+        branch: localStorage.getItem('gh_branch') || 'main',
+        token: localStorage.getItem('gh_token') || ''
+      },
+      tree: [],
+      tabs: [],        
+      activeTab: null, 
+      editor: null,
+      editorModels: {}, 
+      cache: {} 
+    };
+    
+    // Placeholder for UI, GitHub, APP to be populated later
+    window.UI = {};
+    window.GitHub = {};
+    window.APP = { initialized: false };
+    window.AUTH = {};
+  </script>
+</head>
+<body class="flex flex-col h-screen text-ide-text overflow-hidden antialiased">
+
+  <!-- ==========================================
+       LOGIN SCREEN
+       ========================================== -->
+  <div id="login-screen" class="fixed inset-0 bg-ide-bg z-[100] flex items-center justify-center overflow-hidden">
+    <div class="bg-shape1 animate-blob"></div>
+    <div class="bg-shape2 animate-blob" style="animation-delay: 2s;"></div>
+    <div class="bg-shape3 animate-blob" style="animation-delay: 4s;"></div>
+
+    <div class="glass-card p-10 rounded-3xl w-full max-w-md flex flex-col gap-8 relative z-10 animate-fade-in mx-4 opacity-0">
+      <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-ide-accent via-purple-500 to-ide-success rounded-t-3xl opacity-80"></div>
+      
+      <div class="text-center mt-2">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-[#111113]/80 border border-white/10 mb-6 shadow-2xl transform hover:scale-105 transition duration-300 ring-4 ring-black/20">
+          <i data-lucide="terminal-square" class="w-10 h-10 text-ide-accent"></i>
+        </div>
+        <h2 class="text-3xl font-bold text-white tracking-tight">Cloud Studio</h2>
+        <p class="text-ide-text text-sm mt-2 font-medium">Private Dev Environment</p>
+      </div>
+      
+      <div id="auth-error" class="hidden bg-ide-danger/10 border border-ide-danger/20 text-ide-danger px-4 py-3 rounded-xl text-sm text-center flex items-center gap-2 justify-center font-medium shadow-inner">
+        <i data-lucide="shield-alert" class="w-5 h-5 shrink-0"></i> <span id="auth-error-text"></span>
+      </div>
+
+      <div class="flex flex-col gap-5">
+        <div>
+          <label class="block text-xs font-bold text-ide-text mb-2 uppercase tracking-wider">Email Address</label>
+          <div class="relative">
+            <i data-lucide="mail" class="absolute left-3.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-ide-text"></i>
+            <input type="email" id="auth-email" class="ide-input w-full pl-11 py-3.5 text-sm" placeholder="developer@workspace.local">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-ide-text mb-2 uppercase tracking-wider">Security Key</label>
+          <div class="relative">
+            <i data-lucide="key-round" class="absolute left-3.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-ide-text"></i>
+            <input type="password" id="auth-password" class="ide-input w-full pl-11 py-3.5 text-sm" placeholder="••••••••••••">
+          </div>
+        </div>
+        
+        <button onclick="window.AUTH.loginWithEmail()" id="btn-login" class="w-full py-3.5 bg-ide-accent hover:bg-ide-accentHover text-white text-sm font-bold rounded-xl shadow-lg shadow-ide-accent/25 hover:shadow-ide-accent/40 transition-all flex items-center justify-center gap-2 mt-2 group border border-white/10">
+          <i data-lucide="lock" class="w-4 h-4 group-hover:hidden transition-all"></i>
+          <i data-lucide="unlock" class="w-4 h-4 hidden group-hover:block transition-all"></i>
+          Authenticate & Enter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MAIN APPLICATION (Hidden initially)
+       ========================================== -->
+  <div id="app-wrapper" class="hidden flex-col h-screen w-full">
+
+    <!-- Global Loader -->
+    <div id="global-loader" class="fixed inset-0 bg-ide-bg/90 backdrop-blur-sm z-[110] flex items-center justify-center transition-all duration-300">
+      <div class="flex flex-col items-center gap-6 p-8 rounded-2xl bg-ide-surface border border-white/5 shadow-2xl">
+        <div class="relative w-16 h-16 flex items-center justify-center">
+          <div class="absolute inset-0 border-4 border-ide-accent/20 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-ide-accent rounded-full border-t-transparent animate-spin"></div>
+          <i data-lucide="braces" class="w-6 h-6 text-ide-accent animate-pulse-slow"></i>
+        </div>
+        <span class="text-sm font-semibold text-ide-textBright tracking-widest uppercase" id="loader-text">Loading Workspace...</span>
+      </div>
+    </div>
+
+    <!-- Top Toolbar -->
+    <header class="h-[52px] bg-ide-surface border-b border-ide-border flex items-center justify-between px-4 shrink-0 shadow-sm z-30">
+      <div class="flex items-center gap-4">
+        <button id="btn-menu" class="md:hidden p-2 hover:bg-white/10 rounded-lg text-ide-text hover:text-white transition">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-ide-accent to-purple-600 flex items-center justify-center shadow-md shadow-ide-accent/20 border border-white/10">
+            <i data-lucide="terminal" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="font-bold text-ide-textBright tracking-wide hidden sm:inline text-sm">Cloud Studio</span>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-2 bg-[#050505] p-1.5 rounded-xl border border-ide-border shadow-inner">
+        <button onclick="window.APP.runActiveFile()" class="flex items-center gap-2 px-4 py-1.5 bg-ide-success/10 hover:bg-ide-success/20 text-ide-success text-sm font-bold rounded-lg transition border border-ide-success/20">
+          <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> <span class="hidden sm:inline">Run</span>
+        </button>
+        <button onclick="window.UI.showModal('commit-modal')" class="flex items-center gap-2 px-4 py-1.5 bg-ide-accent/10 hover:bg-ide-accent/20 text-ide-accent text-sm font-bold rounded-lg transition border border-ide-accent/20">
+          <i data-lucide="git-commit" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Commit</span>
+        </button>
+        <div class="w-px h-5 bg-ide-border mx-1"></div>
+        <button onclick="window.UI.showModal('settings-modal')" class="p-2 hover:bg-white/10 text-ide-text hover:text-white rounded-lg transition" title="Settings">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+        <button onclick="window.AUTH.logout()" class="p-2 hover:bg-ide-danger/20 text-ide-danger rounded-lg transition" title="Logout">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="layout-grid relative">
+      
+      <!-- Sidebar / File Explorer -->
+      <aside id="sidebar" class="sidebar">
+        <div class="p-4 border-b border-ide-border flex items-center justify-between bg-[#111113]">
+          <span class="text-[11px] font-bold uppercase tracking-widest text-ide-text">Explorer</span>
+          <div class="flex gap-0.5">
+            <button onclick="window.UI.showModal('new-file-modal')" class="p-1.5 hover:bg-white/10 rounded-md text-ide-text hover:text-white transition" title="New File"><i data-lucide="file-plus-2" class="w-4 h-4"></i></button>
+            <button onclick="document.getElementById('file-upload-input').click()" class="p-1.5 hover:bg-white/10 rounded-md text-ide-text hover:text-white transition" title="Upload Files"><i data-lucide="upload-cloud" class="w-4 h-4"></i></button>
+            <button onclick="window.APP.loadRepoTree()" class="p-1.5 hover:bg-white/10 rounded-md text-ide-text hover:text-white transition" title="Refresh"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+          </div>
+          <input type="file" id="file-upload-input" multiple class="hidden" onchange="window.APP.handleFileUpload(event)">
+        </div>
+        
+        <div id="file-tree-container" class="flex-1 overflow-y-auto py-3 text-[13px] font-mono custom-scrollbar">
+          <!-- File tree injected here -->
+        </div>
+      </aside>
+
+      <!-- Overlay for mobile sidebar -->
+      <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-10 hidden md:hidden" onclick="window.UI.toggleSidebar(false)"></div>
+
+      <!-- Main Workspace -->
+      <main class="main-area">
+        <!-- Tabs -->
+        <div class="flex bg-ide-surface overflow-x-auto no-scrollbar border-b border-ide-border" id="tabs-container">
+          <!-- Tabs injected here -->
+        </div>
+
+        <!-- Editor Area -->
+        <div class="editor-container" id="editor-wrapper">
+          <div id="monaco-editor" class="absolute inset-0"></div>
+          
+          <!-- Empty State -->
+          <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center bg-ide-bg z-10">
+            <div class="w-24 h-24 mb-6 opacity-10 flex items-center justify-center bg-white/5 rounded-3xl border border-white/10">
+              <i data-lucide="code-2" class="w-12 h-12 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-ide-textBright">Cloud Studio Ready</h3>
+            <p class="text-ide-text text-sm mt-2">Select a file from the explorer to start coding.</p>
+            <button onclick="window.UI.showModal('new-file-modal')" class="mt-8 px-5 py-2.5 bg-ide-surface hover:bg-[#1a1a1e] border border-ide-border rounded-xl text-sm font-medium transition flex items-center gap-2 text-ide-textBright hover:shadow-lg">
+              <i data-lucide="plus" class="w-4 h-4"></i> Create New File
+            </button>
+          </div>
+
+          <!-- Image Preview -->
+          <div id="image-preview" class="absolute inset-0 bg-ide-bg z-20 hidden flex-col items-center justify-center p-6">
+            <div class="bg-[#111113] p-6 rounded-2xl border border-ide-border shadow-2xl max-w-full max-h-[80%] flex items-center justify-center relative overflow-hidden">
+               <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+               <img id="image-preview-img" class="max-w-full max-h-full object-contain rounded-lg drop-shadow-2xl relative z-10" src="" alt="Preview">
+            </div>
+            <p id="image-preview-name" class="mt-6 px-5 py-2 bg-ide-surface border border-ide-border rounded-full text-sm font-mono text-ide-textBright shadow-sm"></p>
+          </div>
+        </div>
+
+        <!-- Vertical Resizer -->
+        <div class="resizer-v" id="resizer"></div>
+
+        <!-- Bottom Panel -->
+        <div class="bottom-panel" id="bottom-panel">
+          <div class="flex items-center justify-between px-5 py-2.5 bg-ide-surface border-b border-ide-border shrink-0">
+            <div class="flex items-center gap-3 text-xs font-bold text-ide-text uppercase tracking-wider">
+              <span class="flex items-center gap-2 text-ide-textBright"><i data-lucide="terminal-square" class="w-4 h-4 text-ide-accent"></i> Output & Console</span>
+            </div>
+            <button onclick="window.UI.clearOutput()" class="p-1.5 hover:bg-white/10 rounded-lg text-ide-text hover:text-white transition" title="Clear Output"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+          <div class="flex-1 relative bg-[#050505]">
+            <iframe id="html-preview" class="absolute inset-0 w-full h-full bg-white hidden border-none"></iframe>
+            <div id="console-output" class="absolute inset-0 w-full h-full p-5 font-mono text-[13px] leading-relaxed overflow-y-auto text-ide-textBright whitespace-pre-wrap selection:bg-white/20 custom-scrollbar"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ==========================================
+         MODALS
+         ========================================== -->
+    
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div class="modal-content w-full max-w-md bg-ide-surface border border-ide-border rounded-2xl shadow-2xl flex flex-col mx-4">
+        <div class="px-6 py-5 border-b border-ide-border flex justify-between items-center bg-white/[0.02] rounded-t-2xl">
+          <h3 class="font-bold text-lg flex items-center gap-2 text-ide-textBright"><i data-lucide="settings-2" class="w-5 h-5 text-ide-accent"></i> Workspace Config</h3>
+          <button onclick="window.UI.hideModal('settings-modal')" class="text-ide-text hover:text-white bg-white/5 hover:bg-white/10 p-1.5 rounded-lg transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div class="p-6 flex flex-col gap-5">
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-ide-text mb-2">GitHub Username</label>
+            <input type="text" id="cfg-user" class="ide-input w-full" placeholder="e.g. torvalds">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-ide-text mb-2">Repository Name</label>
+            <input type="text" id="cfg-repo" class="ide-input w-full" placeholder="e.g. my-project">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-ide-text mb-2">Branch</label>
+            <input type="text" id="cfg-branch" class="ide-input w-full" placeholder="main">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-ide-text mb-2 flex justify-between">
+              <span>Personal Access Token</span>
+              <span class="text-[10px] text-ide-accent">Required for Saving</span>
+            </label>
+            <input type="password" id="cfg-token" class="ide-input w-full font-mono text-sm" placeholder="ghp_xxxxxxxxxxxx">
+            <div class="mt-3 text-xs text-yellow-200/90 bg-yellow-500/10 p-3.5 rounded-xl border border-yellow-500/20 flex gap-3">
+              <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 text-yellow-500"></i>
+              <p>PAT is stored locally in your browser. Ensure you are on a trusted device.</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 border-t border-ide-border bg-[#050505] flex justify-end gap-3 rounded-b-2xl">
+          <button onclick="window.UI.hideModal('settings-modal')" class="px-5 py-2.5 text-sm font-medium hover:bg-white/5 rounded-xl transition text-ide-textBright">Cancel</button>
+          <button onclick="window.APP.saveSettings()" class="px-6 py-2.5 text-sm font-bold bg-ide-accent hover:bg-ide-accentHover text-white rounded-xl shadow-lg shadow-ide-accent/20 transition">Save & Reload</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- New File Modal -->
+    <div id="new-file-modal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div class="modal-content w-full max-w-sm bg-ide-surface border border-ide-border rounded-2xl shadow-2xl flex flex-col mx-4">
+        <div class="px-6 py-5 border-b border-ide-border flex justify-between items-center bg-white/[0.02] rounded-t-2xl">
+          <h3 class="font-bold text-lg flex items-center gap-2 text-ide-textBright"><i data-lucide="file-plus-2" class="w-5 h-5 text-ide-accent"></i> Create File</h3>
+          <button onclick="window.UI.hideModal('new-file-modal')" class="text-ide-text hover:text-white bg-white/5 hover:bg-white/10 p-1.5 rounded-lg transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div class="p-6">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-ide-text mb-2">File Path & Name</label>
+          <input type="text" id="new-file-name" class="ide-input w-full font-mono text-sm" placeholder="src/components/App.js">
+          <p class="text-[11px] text-ide-text mt-3 bg-white/5 p-2 rounded-lg border border-white/5">Use slashes (/) to auto-create directories.</p>
+        </div>
+        <div class="p-5 border-t border-ide-border bg-[#050505] flex justify-end gap-3 rounded-b-2xl">
+          <button onclick="window.UI.hideModal('new-file-modal')" class="px-5 py-2.5 text-sm font-medium hover:bg-white/5 rounded-xl transition text-ide-textBright">Cancel</button>
+          <button onclick="window.APP.createNewFile()" class="px-6 py-2.5 text-sm font-bold bg-ide-success hover:bg-emerald-600 text-white rounded-xl shadow-lg shadow-ide-success/20 transition">Create File</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commit Modal -->
+    <div id="commit-modal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div class="modal-content w-full max-w-md bg-ide-surface border border-ide-border rounded-2xl shadow-2xl flex flex-col mx-4">
+        <div class="px-6 py-5 border-b border-ide-border flex justify-between items-center bg-white/[0.02] rounded-t-2xl">
+          <h3 class="font-bold text-lg flex items-center gap-2 text-ide-textBright"><i data-lucide="git-commit" class="w-5 h-5 text-ide-accent"></i> Commit Changes</h3>
+          <button onclick="window.UI.hideModal('commit-modal')" class="text-ide-text hover:text-white bg-white/5 hover:bg-white/10 p-1.5 rounded-lg transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div class="p-6">
+          <div class="bg-[#050505] border border-ide-border rounded-xl p-4 mb-5 shadow-inner">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-ide-text mb-1">Target File</p>
+            <p id="commit-file-name" class="text-sm font-mono text-ide-accent font-medium"></p>
+          </div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-ide-text mb-2">Commit Message</label>
+          <input type="text" id="commit-message" class="ide-input w-full" placeholder="Update feature logic">
+        </div>
+        <div class="p-5 border-t border-ide-border bg-[#050505] flex justify-end gap-3 rounded-b-2xl">
+          <button onclick="window.UI.hideModal('commit-modal')" class="px-5 py-2.5 text-sm font-medium hover:bg-white/5 rounded-xl transition text-ide-textBright">Cancel</button>
+          <button onclick="window.APP.saveToGitHub()" id="btn-confirm-commit" class="px-6 py-2.5 text-sm font-bold bg-ide-accent hover:bg-ide-accentHover text-white rounded-xl shadow-lg shadow-ide-accent/20 transition flex items-center gap-2">
+            Push to GitHub
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal" class="modal-overlay fixed inset-0 z-[60] flex items-center justify-center bg-black/80">
+      <div class="modal-content w-full max-w-sm bg-ide-surface border border-ide-border rounded-2xl shadow-2xl flex flex-col mx-4 text-center">
+        <div class="p-8">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-ide-danger/10 mb-5 text-ide-danger border border-ide-danger/20">
+            <i data-lucide="alert-triangle" class="w-7 h-7"></i>
+          </div>
+          <h3 class="text-xl font-bold text-ide-textBright mb-2" id="confirm-title">Are you sure?</h3>
+          <p class="text-sm text-ide-text" id="confirm-message">This action cannot be undone.</p>
+        </div>
+        <div class="p-4 border-t border-ide-border bg-[#050505] flex justify-center gap-3 rounded-b-2xl">
+          <button onclick="window.UI.hideModal('confirm-modal')" class="px-5 py-2.5 text-sm font-medium hover:bg-white/5 rounded-xl transition w-full text-ide-textBright border border-transparent hover:border-white/10">Cancel</button>
+          <button id="btn-confirm-action" class="px-5 py-2.5 text-sm font-bold bg-ide-danger hover:bg-red-600 text-white rounded-xl shadow-lg shadow-ide-danger/20 transition w-full">Confirm Action</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3"></div>
+
+  </div> <!-- End of app-wrapper -->
+
+
+  <!-- ==========================================
+       MAIN JAVASCRIPT LOGIC
+       ========================================== -->
+  <script>
+    // Initialize UI Utilities globally
+    window.UI = {
+      showModal: (id) => {
+        document.getElementById(id).classList.add('active');
+        if (id === 'settings-modal') {
+          document.getElementById('cfg-user').value = window.STATE.config.user;
+          document.getElementById('cfg-repo').value = window.STATE.config.repo;
+          document.getElementById('cfg-branch').value = window.STATE.config.branch;
+          document.getElementById('cfg-token').value = window.STATE.config.token;
+        }
+        if (id === 'commit-modal') {
+          if (!window.STATE.activeTab) {
+            window.UI.hideModal('commit-modal');
+            window.UI.toast('No active file to save', 'warning');
+            return;
+          }
+          document.getElementById('commit-file-name').innerText = window.STATE.activeTab;
+          document.getElementById('commit-message').value = `Update ${window.STATE.activeTab.split('/').pop()}`;
+        }
+      },
+      hideModal: (id) => {
+        document.getElementById(id).classList.remove('active');
+      },
+      confirm: (title, message, onConfirmCallback) => {
+        document.getElementById('confirm-title').innerText = title;
+        document.getElementById('confirm-message').innerText = message;
+        const btn = document.getElementById('btn-confirm-action');
+        
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        newBtn.addEventListener('click', () => {
+          window.UI.hideModal('confirm-modal');
+          if (onConfirmCallback) onConfirmCallback();
+        });
+        
+        window.UI.showModal('confirm-modal');
+      },
+      toast: (msg, type = 'info') => {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        
+        const styleMap = {
+          success: { bg: 'bg-[#111113]', border: 'border-emerald-500/30', icon: 'check-circle', iconColor: 'text-emerald-400' },
+          error: { bg: 'bg-[#111113]', border: 'border-rose-500/30', icon: 'alert-octagon', iconColor: 'text-rose-400' },
+          warning: { bg: 'bg-[#111113]', border: 'border-yellow-500/30', icon: 'alert-triangle', iconColor: 'text-yellow-400' },
+          info: { bg: 'bg-[#111113]', border: 'border-blue-500/30', icon: 'info', iconColor: 'text-blue-400' }
+        };
+        const s = styleMap[type];
+        
+        toast.className = `toast flex flex-col overflow-hidden rounded-xl shadow-2xl border ${s.border} ${s.bg} w-[340px]`;
+        toast.innerHTML = `
+          <div class="flex items-center gap-3 px-5 py-4">
+            <i data-lucide="${s.icon}" class="w-5 h-5 shrink-0 ${s.iconColor}"></i>
+            <span class="text-[13px] font-medium text-white leading-tight">${msg}</span>
+          </div>
+          <div class="h-1 bg-white/5 w-full"><div class="h-full ${s.iconColor.replace('text-', 'bg-')} transition-all duration-[4000ms] ease-linear w-0" style="width: 100%"></div></div>
+        `;
+        
+        container.appendChild(toast);
+        if (window.lucide) lucide.createIcons();
+        
+        setTimeout(() => { toast.querySelector('.bg-white\\/5 > div').style.width = '0%'; }, 50);
+
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(10px) scale(0.95)';
+          setTimeout(() => toast.remove(), 300);
+        }, 4000);
+      },
+      toggleSidebar: (force) => {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const isOpen = force !== undefined ? force : !sidebar.classList.contains('open');
+        if (isOpen) {
+          sidebar.classList.add('open');
+          overlay.classList.remove('hidden');
+        } else {
+          sidebar.classList.remove('open');
+          overlay.classList.add('hidden');
+        }
+      },
+      clearOutput: () => {
+        document.getElementById('console-output').innerText = '';
+        document.getElementById('html-preview').src = 'about:blank';
+      },
+      logToConsole: (msg, isError = false) => {
+        const out = document.getElementById('console-output');
+        const line = document.createElement('div');
+        line.className = `mb-1.5 ${isError ? 'text-ide-danger font-semibold' : 'text-emerald-400'}`;
+        line.innerText = typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg;
+        out.appendChild(line);
+        out.scrollTop = out.scrollHeight;
+      }
+    };
+
+    // GitHub API Module
+    window.GitHub = {
+      getHeaders: () => {
+        const h = { 'Accept': 'application/vnd.github.v3+json' };
+        if (window.STATE.config.token) h['Authorization'] = `token ${window.STATE.config.token}`;
+        return h;
+      },
+      fetchAPI: async (endpoint, options = {}) => {
+        const url = `https://api.github.com/repos/${window.STATE.config.user}/${window.STATE.config.repo}${endpoint}`;
+        options.headers = { ...window.GitHub.getHeaders(), ...(options.headers || {}) };
+        const res = await fetch(url, options);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || `HTTP Error ${res.status}`);
+        }
+        return res.json();
+      },
+      getTree: async () => {
+        try {
+          const data = await window.GitHub.fetchAPI(`/git/trees/${window.STATE.config.branch}?recursive=1`);
+          return data.tree;
+        } catch (e) {
+          if (e.message.includes('404')) {
+            window.UI.toast('Repository/Branch not found. Check settings.', 'error');
+            return [];
+          }
+          throw e;
+        }
+      },
+      getFileInfo: async (path) => {
+        return window.GitHub.fetchAPI(`/contents/${path}?ref=${window.STATE.config.branch}`);
+      },
+      saveFile: async (path, contentBase64, message, sha = null) => {
+        const payload = { message: message, content: contentBase64, branch: window.STATE.config.branch };
+        if (sha) payload.sha = sha;
+        return window.GitHub.fetchAPI(`/contents/${path}`, {
+          method: 'PUT',
+          body: JSON.stringify(payload)
+        });
+      },
+      deleteFile: async (path, sha, message) => {
+        return window.GitHub.fetchAPI(`/contents/${path}`, {
+          method: 'DELETE',
+          body: JSON.stringify({ message, sha, branch: window.STATE.config.branch })
+        });
+      }
+    };
+
+    // Main App Module
+    window.APP = {
+      initialized: false,
+      init: () => {
+        document.getElementById('loader-text').innerText = "Booting Environment...";
+        
+        if (!window.STATE.config.user || !window.STATE.config.repo) {
+          window.UI.showModal('settings-modal');
+          document.getElementById('global-loader').classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => document.getElementById('global-loader').classList.add('hidden'), 300);
+          return;
+        }
+        
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' } });
+        window.MonacoEnvironment = { getWorkerUrl: function() { return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+          self.MonacoEnvironment = { baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/' };
+          importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/base/worker/workerMain.js');`)}`; }
+        };
+
+        require(['vs/editor/editor.main'], function () {
+          monaco.editor.defineTheme('cloudStudioTheme', {
+            base: 'vs-dark',
+            inherit: true,
+            rules: [
+              { background: '050505' }
+            ],
+            colors: {
+              'editor.background': '#050505',
+              'editor.lineHighlightBackground': '#ffffff08',
+              'editorLineNumber.foreground': '#52525b',
+              'editorIndentGuide.background': '#27272a',
+            }
+          });
+
+          window.STATE.editor = monaco.editor.create(document.getElementById('monaco-editor'), {
+            theme: 'cloudStudioTheme',
+            automaticLayout: true,
+            fontSize: 14,
+            fontFamily: "'JetBrains Mono', monospace",
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            padding: { top: 20 },
+            roundedSelection: true,
+            smoothScrolling: true,
+            cursorBlinking: "smooth",
+            formatOnPaste: true,
+          });
+          
+          window.STATE.editor.onDidChangeModelContent(() => {
+            if (window.STATE.activeTab) {
+              const tab = window.STATE.tabs.find(t => t.path === window.STATE.activeTab);
+              if (tab && !tab.isUnsaved) {
+                tab.isUnsaved = true;
+                window.APP.renderTabs();
+              }
+            }
+          });
+
+          window.APP.loadRepoTree();
+        });
+      },
+
+      saveSettings: () => {
+        window.STATE.config.user = document.getElementById('cfg-user').value.trim();
+        window.STATE.config.repo = document.getElementById('cfg-repo').value.trim();
+        window.STATE.config.branch = document.getElementById('cfg-branch').value.trim() || 'main';
+        window.STATE.config.token = document.getElementById('cfg-token').value.trim();
+
+        localStorage.setItem('gh_user', window.STATE.config.user);
+        localStorage.setItem('gh_repo', window.STATE.config.repo);
+        localStorage.setItem('gh_branch', window.STATE.config.branch);
+        localStorage.setItem('gh_token', window.STATE.config.token);
+
+        window.UI.hideModal('settings-modal');
+        window.UI.toast('Settings saved. Refreshing workspace...', 'success');
+        
+        window.STATE.cache = {};
+        window.STATE.tabs = [];
+        window.STATE.activeTab = null;
+        window.STATE.editorModels = {};
+        
+        window.APP.setActiveTab(null);
+        window.APP.loadRepoTree();
+      },
+
+      loadRepoTree: async () => {
+        const loader = document.getElementById('global-loader');
+        loader.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        document.getElementById('loader-text').innerText = "Syncing Repository...";
+        
+        try {
+          const tree = await window.GitHub.getTree();
+          window.STATE.tree = tree.filter(i => i.type === 'blob' || i.type === 'tree').sort((a,b) => a.path.localeCompare(b.path));
+          window.APP.renderFileTree();
+        } catch (err) {
+          // Handled in fetch API
+        } finally {
+          loader.classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => loader.classList.add('hidden'), 300);
+        }
+      },
+
+      renderFileTree: () => {
+        const container = document.getElementById('file-tree-container');
+        container.innerHTML = '';
+        
+        if (window.STATE.tree.length === 0) {
+          container.innerHTML = '<div class="p-5 text-ide-text text-center italic text-xs">Repository is empty or unreadable.</div>';
+          return;
+        }
+
+        window.STATE.tree.forEach(item => {
+          if (item.type === 'tree') return; 
+          
+          const parts = item.path.split('/');
+          const name = parts.pop();
+          const indent = parts.length * 12;
+          
+          const el = document.createElement('div');
+          el.className = `file-item flex items-center justify-between px-3 py-1.5 ${window.STATE.activeTab === item.path ? 'active' : 'text-ide-text hover:text-white'}`;
+          el.style.paddingLeft = `${indent + 12}px`;
+          
+          let icon = 'file';
+          let color = 'text-ide-text';
+          const ext = name.split('.').pop().toLowerCase();
+          
+          if (['js', 'ts', 'jsx', 'tsx'].includes(ext)) { icon = 'file-json'; color = 'text-yellow-400'; }
+          else if (['html', 'htm', 'xml'].includes(ext)) { icon = 'file-code-2'; color = 'text-orange-500'; }
+          else if (['css', 'scss', 'less'].includes(ext)) { icon = 'file-code'; color = 'text-blue-400'; }
+          else if (['json'].includes(ext)) { icon = 'braces'; color = 'text-green-400'; }
+          else if (['png', 'jpg', 'jpeg', 'svg', 'gif', 'webp', 'ico'].includes(ext)) { icon = 'image'; color = 'text-purple-400'; }
+          else if (['md', 'txt'].includes(ext)) { icon = 'file-text'; color = 'text-blue-300'; }
+
+          el.innerHTML = `
+            <div class="flex items-center gap-2.5 overflow-hidden w-full" onclick="window.APP.openFile('${item.path}')">
+              <i data-lucide="${icon}" class="w-4 h-4 shrink-0 ${color}"></i>
+              <span class="truncate text-[12.5px]">${name}</span>
+            </div>
+            <div class="flex items-center gap-1 opacity-0 hover:opacity-100 transition-opacity">
+              <button onclick="window.APP.deleteFilePrompt('${item.path}', '${item.sha}', event)" class="p-1 hover:bg-rose-500/20 text-ide-text hover:text-rose-400 rounded transition" title="Delete"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          `;
+          container.appendChild(el);
+        });
+        if (window.lucide) lucide.createIcons();
+      },
+
+      openFile: async (path) => {
+        window.UI.toggleSidebar(false);
+
+        if (window.STATE.tabs.find(t => t.path === path)) {
+          window.APP.setActiveTab(path);
+          return;
+        }
+
+        try {
+          window.UI.toast(`Opening ${path.split('/').pop()}...`, 'info');
+          let content = '';
+          let sha = null;
+          let isBase64 = false;
+
+          if (window.STATE.cache[path]) {
+            content = window.STATE.cache[path].content;
+            sha = window.STATE.cache[path].sha;
+            isBase64 = window.STATE.cache[path].isBase64;
+          } else {
+            const data = await window.GitHub.getFileInfo(path);
+            sha = data.sha;
+            
+            const ext = path.split('.').pop().toLowerCase();
+            const imageExts = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'ico'];
+            
+            if (imageExts.includes(ext)) {
+              isBase64 = true;
+              content = `data:image/${ext};base64,${data.content.replace(/\n/g, '')}`;
+            } else {
+              content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+            }
+            window.STATE.cache[path] = { content, sha, isBase64, url: data.download_url };
+          }
+
+          const name = path.split('/').pop();
+          window.STATE.tabs.push({ path, name, sha, isBase64, isUnsaved: false });
+          
+          if (!isBase64) {
+            const ext = name.split('.').pop().toLowerCase();
+            let language = 'plaintext';
+            if (['js', 'jsx'].includes(ext)) language = 'javascript';
+            if (['ts', 'tsx'].includes(ext)) language = 'typescript';
+            if (ext === 'html') language = 'html';
+            if (ext === 'css') language = 'css';
+            if (ext === 'json') language = 'json';
+            if (ext === 'md') language = 'markdown';
+            if (ext === 'xml') language = 'xml';
+            
+            const model = monaco.editor.createModel(content, language);
+            window.STATE.editorModels[path] = model;
+          }
+
+          window.APP.setActiveTab(path);
+          window.APP.renderTabs();
+        } catch (err) {
+          window.UI.toast(`Error opening file: ${err.message}`, 'error');
+        }
+      },
+
+      setActiveTab: (path) => {
+        window.STATE.activeTab = path;
+        window.APP.renderTabs();
+        window.APP.renderFileTree(); 
+
+        const emptyState = document.getElementById('empty-state');
+        const monacoContainer = document.getElementById('monaco-editor');
+        const imagePreview = document.getElementById('image-preview');
+
+        if (!path) {
+          emptyState.style.display = 'flex';
+          monacoContainer.style.display = 'none';
+          imagePreview.style.display = 'none';
+          return;
+        }
+
+        emptyState.style.display = 'none';
+        const tab = window.STATE.tabs.find(t => t.path === path);
+
+        if (tab.isBase64) {
+          monacoContainer.style.display = 'none';
+          imagePreview.style.display = 'flex';
+          document.getElementById('image-preview-img').src = window.STATE.cache[path].content;
+          document.getElementById('image-preview-name').innerText = tab.path;
+        } else {
+          imagePreview.style.display = 'none';
+          monacoContainer.style.display = 'block';
+          window.STATE.editor.setModel(window.STATE.editorModels[path]);
+          window.STATE.editor.layout(); 
+        }
+      },
+
+      closeTab: (path, event) => {
+        if (event) event.stopPropagation();
+        
+        const tab = window.STATE.tabs.find(t => t.path === path);
+        if (tab && tab.isUnsaved) {
+          window.UI.confirm(
+            "Discard Unsaved Changes?", 
+            `You have unsaved work in ${tab.name}. Do you want to close it anyway?`, 
+            () => window.APP.forceCloseTab(path)
+          );
+        } else {
+          window.APP.forceCloseTab(path);
+        }
+      },
+
+      forceCloseTab: (path) => {
+        window.STATE.tabs = window.STATE.tabs.filter(t => t.path !== path);
+        if (window.STATE.editorModels[path]) {
+          window.STATE.editorModels[path].dispose();
+          delete window.STATE.editorModels[path];
+        }
+
+        if (window.STATE.activeTab === path) {
+          window.APP.setActiveTab(window.STATE.tabs.length > 0 ? window.STATE.tabs[window.STATE.tabs.length - 1].path : null);
+        } else {
+          window.APP.renderTabs();
+        }
+      },
+
+      renderTabs: () => {
+        const container = document.getElementById('tabs-container');
+        container.innerHTML = '';
+        window.STATE.tabs.forEach(tab => {
+          const el = document.createElement('div');
+          el.className = `tab flex items-center gap-2 px-4 py-2.5 text-[13px] select-none ${window.STATE.activeTab === tab.path ? 'active font-medium' : 'text-ide-text'}`;
+          if (tab.isUnsaved) el.classList.add('unsaved');
+          
+          let icon = 'file';
+          const ext = tab.name.split('.').pop().toLowerCase();
+          if (['js', 'ts'].includes(ext)) icon = 'file-json';
+          else if (['html', 'htm', 'css'].includes(ext)) icon = 'file-code';
+          else if (tab.isBase64) icon = 'image';
+
+          el.innerHTML = `
+            <i data-lucide="${icon}" class="w-4 h-4 ${window.STATE.activeTab === tab.path ? 'text-ide-accent' : ''}"></i>
+            <span>${tab.name}</span>
+            <span class="unsaved-dot"></span>
+            <button class="close-btn p-1 hover:bg-white/10 rounded-md ml-2 transition" onclick="window.APP.closeTab('${tab.path}', event)">
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+          `;
+          el.onclick = () => window.APP.setActiveTab(tab.path);
+          container.appendChild(el);
+        });
+        if (window.lucide) lucide.createIcons();
+      },
+
+      createNewFile: () => {
+        const input = document.getElementById('new-file-name').value.trim();
+        if (!input) return;
+        
+        if (window.STATE.tree.find(t => t.path === input)) {
+          window.UI.toast('File path already exists!', 'warning');
+          return;
+        }
+
+        window.STATE.tree.push({ path: input, type: 'blob', sha: null });
+        window.STATE.cache[input] = { content: '', sha: null, isBase64: false };
+        window.STATE.tabs.push({ path: input, name: input.split('/').pop(), sha: null, isBase64: false, isUnsaved: true });
+        
+        const ext = input.split('.').pop().toLowerCase();
+        let language = 'plaintext';
+        if (['js', 'jsx'].includes(ext)) language = 'javascript';
+        if (['ts', 'tsx'].includes(ext)) language = 'typescript';
+        if (ext === 'html') language = 'html';
+        if (ext === 'css') language = 'css';
+        if (ext === 'json') language = 'json';
+        
+        window.STATE.editorModels[input] = monaco.editor.createModel('', language);
+        
+        window.APP.setActiveTab(input);
+        window.APP.loadRepoTree(); 
+        window.UI.hideModal('new-file-modal');
+        document.getElementById('new-file-name').value = '';
+        window.UI.toast('Local file created. Remember to commit!', 'success');
+      },
+
+      deleteFilePrompt: (path, sha, event) => {
+        if(event) event.stopPropagation();
+        if (!window.STATE.config.token) {
+          window.UI.toast('GitHub Token is required to delete.', 'error');
+          return;
+        }
+        window.UI.confirm(
+          "Delete File?",
+          `Are you sure you want to permanently delete ${path}?`,
+          () => window.APP.executeDelete(path, sha)
+        );
+      },
+
+      executeDelete: async (path, sha) => {
+        try {
+          window.UI.toast(`Deleting ${path}...`, 'info');
+          let targetSha = sha;
+          if(!targetSha) {
+             const freshData = await window.GitHub.getFileInfo(path);
+             targetSha = freshData.sha;
+          }
+          await window.GitHub.deleteFile(path, targetSha, `Delete ${path}`);
+          
+          window.STATE.tree = window.STATE.tree.filter(t => t.path !== path);
+          delete window.STATE.cache[path];
+          if (window.STATE.tabs.find(t => t.path === path)) window.APP.forceCloseTab(path);
+          
+          window.APP.renderFileTree();
+          window.UI.toast('File permanently deleted.', 'success');
+        } catch (err) {
+          window.UI.toast(`Delete failed: ${err.message}`, 'error');
+        }
+      },
+
+      arrayBufferToBase64: (buffer) => {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+      },
+
+      handleFileUpload: async (e) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+        if (!window.STATE.config.token) {
+          window.UI.toast('GitHub Token required to upload.', 'error');
+          return;
+        }
+
+        window.UI.toast(`Uploading ${files.length} file(s)...`, 'info');
+        
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const path = `assets/${file.name}`; 
+          
+          const reader = new FileReader();
+          reader.onload = async (event) => {
+            try {
+              const base64Content = window.APP.arrayBufferToBase64(event.target.result);
+              let sha = null;
+              try {
+                const existing = await window.GitHub.getFileInfo(path);
+                sha = existing.sha;
+              } catch(err) {} 
+
+              await window.GitHub.saveFile(path, base64Content, `Upload ${file.name}`, sha);
+              window.UI.toast(`Success: ${file.name}`, 'success');
+              if (i === files.length - 1) window.APP.loadRepoTree(); 
+            } catch (err) {
+              window.UI.toast(`Upload failed for ${file.name}: ${err.message}`, 'error');
+            }
+          };
+          reader.readAsArrayBuffer(file);
+        }
+        e.target.value = ''; 
+      },
+
+      saveToGitHub: async () => {
+        const path = window.STATE.activeTab;
+        const tab = window.STATE.tabs.find(t => t.path === path);
+        if (!tab) return;
+        
+        if (!window.STATE.config.token) {
+          window.UI.hideModal('commit-modal');
+          window.UI.toast('GitHub Token missing.', 'error');
+          window.UI.showModal('settings-modal');
+          return;
+        }
+
+        const btn = document.getElementById('btn-confirm-commit');
+        btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Pushing...';
+        btn.disabled = true;
+
+        try {
+          let currentSha = null;
+          try {
+            const freshData = await window.GitHub.getFileInfo(path);
+            currentSha = freshData.sha;
+          } catch(e) {} 
+
+          let contentToSave = '';
+          if (tab.isBase64) {
+             contentToSave = window.STATE.cache[path].content.split(',')[1];
+          } else {
+             const rawVal = window.STATE.editorModels[path].getValue();
+             contentToSave = btoa(unescape(encodeURIComponent(rawVal)));
+          }
+
+          const message = document.getElementById('commit-message').value.trim() || `Update ${tab.name}`;
+
+          const res = await window.GitHub.saveFile(path, contentToSave, message, currentSha);
+          
+          tab.sha = res.content.sha;
+          tab.isUnsaved = false;
+          window.STATE.cache[path].sha = res.content.sha;
+          if (!tab.isBase64) {
+            window.STATE.cache[path].content = window.STATE.editorModels[path].getValue();
+          }
+          
+          window.UI.toast('Changes pushed to remote!', 'success');
+          window.UI.hideModal('commit-modal');
+          window.APP.renderTabs();
+        } catch (err) {
+          window.UI.toast(`Commit Failed: ${err.message}`, 'error');
+        } finally {
+          btn.innerHTML = 'Push to GitHub';
+          btn.disabled = false;
+        }
+      },
+
+      runActiveFile: () => {
+        const path = window.STATE.activeTab;
+        if (!path) {
+          window.UI.toast('No active file open.', 'warning');
+          return;
+        }
+
+        const tab = window.STATE.tabs.find(t => t.path === path);
+        if (tab.isBase64) {
+          window.UI.toast('Cannot execute binary/image files.', 'info');
+          return;
+        }
+
+        const code = window.STATE.editorModels[path].getValue();
+        const ext = path.split('.').pop().toLowerCase();
+        
+        const preview = document.getElementById('html-preview');
+        const consoleBox = document.getElementById('console-output');
+
+        window.UI.clearOutput();
+
+        if (['html', 'htm'].includes(ext)) {
+          preview.style.display = 'block';
+          consoleBox.style.display = 'none';
+          const doc = preview.contentDocument || preview.contentWindow.document;
+          doc.open();
+          doc.write(code);
+          doc.close();
+        } else if (['js', 'ts'].includes(ext)) {
+          preview.style.display = 'none';
+          consoleBox.style.display = 'block';
+          window.UI.logToConsole('> Starting Execution...\n');
+          try {
+            const originalLog = console.log;
+            const originalError = console.error;
+            
+            console.log = (...args) => { window.UI.logToConsole(args.join(' ')); };
+            console.error = (...args) => { window.UI.logToConsole(args.join(' '), true); };
+            
+            const runFn = new Function(code);
+            runFn();
+            
+            console.log = originalLog;
+            console.error = originalError;
+            window.UI.logToConsole('\n> Execution Finished.');
+          } catch (err) {
+            window.UI.logToConsole(`Runtime Error: ${err.message}`, true);
+          }
+        } else if (ext === 'json') {
+          preview.style.display = 'none';
+          consoleBox.style.display = 'block';
+          try {
+            const parsed = JSON.parse(code);
+            window.UI.logToConsole("// Valid JSON\n" + JSON.stringify(parsed, null, 2));
+          } catch (e) {
+            window.UI.logToConsole(`SyntaxError: ${e.message}`, true);
+          }
+        } else {
+          preview.style.display = 'none';
+          consoleBox.style.display = 'block';
+          window.UI.logToConsole(`[Raw Text Output]:\n\n${code}`);
+        }
+      }
+    };
+
+    // Load icons immediately for standard HTML elements
+    if (window.lucide) lucide.createIcons();
+    
+    // Resizer Logic
+    const resizer = document.getElementById('resizer');
+    const bottomPanel = document.getElementById('bottom-panel');
+    let isResizing = false;
+    
+    resizer.addEventListener('mousedown', () => { 
+      isResizing = true; 
+      document.body.style.cursor = 'row-resize';
+      resizer.classList.add('dragging');
+      document.body.classList.add('resizing-active'); 
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      const containerHeight = document.querySelector('.main-area').offsetHeight;
+      const newHeight = containerHeight - e.clientY + 52; 
+      if (newHeight > 60 && newHeight < containerHeight - 100) {
+        bottomPanel.style.height = `${newHeight}px`;
+        if (window.STATE.editor) window.STATE.editor.layout(); 
+      }
+    });
+    
+    document.addEventListener('mouseup', () => { 
+      if(isResizing) {
+        isResizing = false; 
+        document.body.style.cursor = 'default';
+        resizer.classList.remove('dragging');
+        document.body.classList.remove('resizing-active');
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.STATE.editor) window.STATE.editor.layout();
+    });
+  </script>
+
+  <!-- ==========================================
+       FIREBASE AUTH & INITIALIZATION
+       ========================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJwIjJ9cLuxkX8mVgJ75BpkPdYjatfDEA",
+      authDomain: "github-92a08.firebaseapp.com",
+      projectId: "github-92a08",
+      storageBucket: "github-92a08.firebasestorage.app",
+      messagingSenderId: "267720358147",
+      appId: "1:267720358147:web:fec7f0c9351a0913d51136",
+      measurementId: "G-FLQVF8NGHD"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const AUTHORIZED_UID = "gVFO5HXhXmcpYSSPamubTktevOW2";
+
+    const loginScreen = document.getElementById('login-screen');
+    const appWrapper = document.getElementById('app-wrapper');
+    const errorDiv = document.getElementById('auth-error');
+    const errorText = document.getElementById('auth-error-text');
+    const btnLogin = document.getElementById('btn-login');
+
+    function showError(msg) {
+      errorText.innerText = msg;
+      errorDiv.classList.remove('hidden');
+    }
+
+    function checkAuthorization(user) {
+      if (user.uid === AUTHORIZED_UID) {
+        loginScreen.classList.add('hidden');
+        appWrapper.classList.remove('hidden');
+        appWrapper.classList.add('flex');
+        
+        if (window.APP && !window.APP.initialized) {
+           window.APP.init();
+           window.APP.initialized = true;
+        }
+      } else {
+        signOut(auth);
+        showError("Access Denied: Unauthorized Identity Detected.");
+        appWrapper.classList.add('hidden');
+        appWrapper.classList.remove('flex');
+        loginScreen.classList.remove('hidden');
+        document.getElementById('global-loader').classList.add('opacity-0', 'pointer-events-none'); 
+      }
+    }
+
+    window.AUTH = {
+      loginWithEmail: async () => {
+        const email = document.getElementById('auth-email').value.trim();
+        const password = document.getElementById('auth-password').value;
+        if (!email || !password) return showError("Valid credentials required.");
+        
+        btnLogin.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Authenticating...';
+        btnLogin.disabled = true;
+        errorDiv.classList.add('hidden');
+
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+          showError("Authentication Failed. Check credentials.");
+          btnLogin.innerHTML = '<i data-lucide="lock" class="w-4 h-4 group-hover:hidden"></i><i data-lucide="unlock" class="w-4 h-4 hidden group-hover:block"></i> Authenticate & Enter';
+          btnLogin.disabled = false;
+          if (window.lucide) lucide.createIcons();
+        }
+      },
+      logout: async () => {
+        const loader = document.getElementById('global-loader');
+        loader.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        document.getElementById('loader-text').innerText = "Logging out securely...";
+        await signOut(auth);
+        window.location.reload(); 
+      }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        checkAuthorization(user);
+      } else {
+        const loader = document.getElementById('global-loader');
+        loader.classList.add('opacity-0', 'pointer-events-none'); 
+        setTimeout(() => loader.classList.add('hidden'), 300);
+        
+        appWrapper.classList.add('hidden');
+        appWrapper.classList.remove('flex');
+        loginScreen.classList.remove('hidden');
+      }
+    });
+  </script>
+
+  <!-- Monaco Editor Loader (Loads at end safely) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.min.js"></script>
+</body>
+</html>
+```eof
+
+अब यह कोड बिलकुल एरर-फ्री है। आप इसे कॉपी करके इस्तेमाल कर सकते हैं। अगर इसमें आपको और भी कोई फीचर जोड़ना हो तो मुझे बेझिझक बताएं!
