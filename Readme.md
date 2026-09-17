@@ -38,6 +38,8 @@ Whether it serves as a portfolio, a blog, or a creative showcase, this project h
 
 - **Live Website:** [https://lalanview.vercel.app/](https://lalanview.vercel.app/)
 
+- **WhatsApp Channel:** [https://lalanview.vercel.app/assets/whatsapp.jpg]
+
 ---
 
 ## 🛠️ Built With
