@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineer Unfiltered | Join the Community</title>
+    <meta name="description" content="An open space for engineers, students, thinkers and everyday conversations. Talk • Share • Connect.">
+    <meta name="theme-color" content="#09090b">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Engineer Unfiltered | Join the Community">
+    <meta property="og:description" content="Talk • Share • Connect. Join our open community for engineers, students, and thinkers.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://lalanview.vercel.app/assets/whatsApp/group1_profilephoto.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            /* Futuristic Dark Theme */
+            --bg-deep: #050505;
+            --bg-surface: #0a0a0a;
+            --bg-glass: rgba(15, 15, 15, 0.6);
+            --bg-glass-hover: rgba(25, 25, 25, 0.8);
+            
+            /* Accents */
+            --primary: #00ff88; /* Cyber Green */
+            --primary-glow: rgba(0, 255, 136, 0.3);
+            --primary-dim: rgba(0, 255, 136, 0.1);
+            
+            --secondary: #00e5ff; /* Cyan */
+            --secondary-glow: rgba(0, 229, 255, 0.3);
+            
+            /* Text */
+            --text-pure: #ffffff;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            
+            /* Borders */
+            --border-light: rgba(255, 255, 255, 0.05);
+            --border-glow: rgba(0, 255, 136, 0.2);
+            
+            /* Brand Colors */
+            --whatsapp: #25D366;
+            --telegram: #2AABEE;
+            
+            /* Typography */
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            /* Sizing */
+            --max-w: 600px; /* Narrow poster format for mobile perfection */
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            
+            /* Animation */
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            background-image: 
+                linear-gradient(var(--border-light) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center top;
+        }
+
+        /* Ambient Glow Behind Content */
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: var(--max-w);
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 50% 20%, var(--primary-dim) 0%, transparent 60%),
+                radial-gradient(circle at 50% 80%, rgba(0, 229, 255, 0.05) 0%, transparent 50%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding-bottom: 4rem;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--text-pure) 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mono-text {
+            font-family: var(--font-mono);
+            letter-spacing: -0.05em;
+        }
+
+        /* Glassmorphism Sections */
+        .glass-section {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+            margin: 0 1rem;
+        }
+
+        .glass-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+            opacity: 0.5;
+        }
+
+        /* Hero / Brand Intro */
+        .hero-section {
+            text-align: center;
+            padding: 4rem 1.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .hero-logo-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+        }
+
+        .hero-logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-surface);
+            box-shadow: 0 0 30px var(--primary-glow);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-ring {
+            position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            border-top-color: var(--primary);
+            border-bottom-color: var(--secondary);
+            z-index: 1;
+            animation: spin 8s linear infinite;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
+            margin-top: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--primary);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Standardized Section Headers */
+        .section-tag {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--border-glow);
+            border-radius: 99px;
+            background: var(--primary-dim);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-pure);
+        }
+
+        /* Feature Lists */
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .feature-item:hover {
+            border-color: var(--border-light);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .feature-icon {
+            color: var(--primary);
+            flex-shrink: 0;
+            margin-top: 2px;
+            width: 24px;
+            height: 24px;
+        }
+
+        .feature-text h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-pure);
+        }
+
+        .feature-text p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .highlight-text {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Link Cards (Channels/Groups) */
+        .link-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: var(--platform-color, var(--primary));
+            opacity: 0.8;
+        }
+
+        .link-card:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .link-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .platform-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            color: var(--platform-color, var(--text-pure));
+        }
+        
+        .platform-icon svg { width: 26px; height: 26px; }
+
+        .link-details h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.1rem;
+            color: var(--text-pure);
+        }
+
+        .link-details p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .link-action {
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .link-card:hover .link-action {
+            color: var(--text-pure);
+            transform: translateX(4px);
+        }
+
+        .whatsapp-link { --platform-color: var(--whatsapp); }
+        .telegram-link { --platform-color: var(--telegram); }
+
+        /* QR Scanner Section */
+        .qr-section {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .qr-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(0,0,0,0.5);
+            padding: 0.25rem;
+            border-radius: 99px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-light);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .qr-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .qr-tab.active {
+            background: var(--bg-surface);
+            color: var(--text-pure);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .qr-container {
+            background: #ffffff;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        
+        .qr-container img, .qr-container canvas {
+            display: block;
+        }
+
+        .qr-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Rules Section */
+        .rules-list {
+            counter-reset: rule;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .rule-item {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .rule-item::before {
+            counter-increment: rule;
+            content: "0" counter(rule);
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            opacity: 0.5;
+        }
+        
+        .rule-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .rule-item p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+            font-family: var(--font-main);
+            width: 100%;
+        }
+
+        .btn-secondary {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text-pure);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .btn-full {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--bg-deep);
+            box-shadow: 0 10px 30px var(--primary-glow);
+        }
+        
+        .btn-full:hover {
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--text-pure);
+            font-size: 1.1rem;
+        }
+        
+        .footer-logo img {
+            width: 24px; height: 24px; border-radius: 50%;
+        }
+        
+        .manager-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.05);
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-light);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-pure);
+            color: var(--bg-deep);
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .toast.show { bottom: 2rem; }
+
+        /* Animations */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        @media (max-width: 360px) {
+            .action-buttons { grid-template-columns: 1fr; }
+            .hero-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <main class="container">
+        
+        <!-- Hero / Brand Intro -->
+        <header class="hero-section fade-in">
+            <div class="hero-logo-container">
+                <div class="hero-ring"></div>
+                <img src="https://lalanview.vercel.app/assets/whatsApp/group1_profilephoto.png" alt="Engineer Unfiltered" class="hero-logo">
+            </div>
+            
+            <div>
+                <h1 class="hero-title text-gradient mono-text">ENGINEER<br>UNFILTERED</h1>
+                <p class="hero-subtitle">Talk • Share • Connect</p>
+            </div>
+            
+            <p class="hero-desc">
+                An open digital space for engineers, students, and thinkers to share ideas and everyday conversations.
+            </p>
+        </header>
+
+        <!-- What You Get / Why Join -->
+        <section class="glass-section fade-in delay-1">
+            <span class="section-tag">What You Get</span>
+            <h2 class="section-title">Everything In One Place</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                More than just a group. We've organized our platforms to give you the best experience, whether you need heavy study files or just want to chat.
+            </p>
+            
+            <div class="feature-list">
+                <!-- Telegram Highlight -->
+                <div class="feature-item" style="border-color: rgba(42, 171, 238, 0.3); background: rgba(42, 171, 238, 0.05);">
+                    <div style="color: var(--telegram); flex-shrink: 0; margin-top: 2px;">
+                        <!-- Authentic Telegram SVG -->
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Important Notes & Big Files</h4>
+                        <p>Our Telegram is dedicated to delivering <span style="color: var(--text-main);">very important notes</span> and <span style="color: var(--text-main);">large files/documents</span> that you need for your studies and projects.</p>
+                    </div>
+                </div>
+                
+                <!-- WhatsApp Highlight -->
+                <div class="feature-item" style="border-color: rgba(37, 211, 102, 0.2);">
+                    <div style="color: var(--whatsapp); flex-shrink: 0; margin-top: 2px;">
+                        <!-- Authentic WhatsApp SVG -->
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Daily Content & Chat</h4>
+                        <p>Use WhatsApp for tons of daily updates, sharing ideas, and normal, unrestricted conversations with the community.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Official Channels (One-Way) -->
+        <section class="glass-section fade-in delay-2">
+            <span class="section-tag">Read-Only</span>
+            <h2 class="section-title">Official Channels</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                Get direct updates, notes, and resources without the chat noise.
+            </p>
+
+            <div class="link-grid">
+                <a href="https://t.me/engineerunfiltered" target="_blank" rel="noopener" class="link-card telegram-link">
+                    <div class="link-info">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        </div>
+                        <div class="link-details">
+                            <h4>Telegram Channel</h4>
+                            <p>For Big Files & Notes</p>
+                        </div>
+                    </div>
+                    <svg class="link-action" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </a>
+                
+                <a href="https://whatsapp.com/channel/0029VbDpocB1SWt2Q4T8hG0E" target="_blank" rel="noopener" class="link-card whatsapp-link">
+                    <div class="link-info">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                        </div>
+                        <div class="link-details">
+                            <h4>WhatsApp Channel</h4>
+                            <p>Daily Updates & News</p>
+                        </div>
+                    </div>
+                    <svg class="link-action" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Private Groups (Interactive) -->
+        <section class="glass-section fade-in delay-3" style="border-color: var(--border-glow); box-shadow: 0 0 30px rgba(0, 255, 136, 0.05);">
+            <span class="section-tag" style="background: var(--primary); color: var(--bg-deep);">Interactive Chat</span>
+            <h2 class="section-title">Private Groups</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                Join the conversation. Normal talk, engineering ideas, and everyday sharing are always welcome here.
+            </p>
+
+            <div class="link-grid">
+                <a href="https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener" class="link-card whatsapp-link">
+                    <div class="link-info">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                        </div>
+                        <div class="link-details">
+                            <h4>WhatsApp Group</h4>
+                            <p>Main Community Chat</p>
+                        </div>
+                    </div>
+                    <svg class="link-action" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </a>
+
+                <a href="https://t.me/+UFL3YEnqKYI5MTll" target="_blank" rel="noopener" class="link-card telegram-link">
+                    <div class="link-info">
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        </div>
+                        <div class="link-details">
+                            <h4>Telegram Group</h4>
+                            <p>Community Chat & Sharing</p>
+                        </div>
+                    </div>
+                    <svg class="link-action" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Dynamic QR Section -->
+        <section class="glass-section fade-in delay-4">
+            <span class="section-tag">Desktop Scan</span>
+            <h2 class="section-title">Scan to Join</h2>
+            
+            <div class="qr-section">
+                <div class="qr-tabs">
+                    <button class="qr-tab active" data-target="wa-group">WA Group</button>
+                    <button class="qr-tab" data-target="tg-group">TG Group</button>
+                    <button class="qr-tab" data-target="wa-chan">WA Chan</button>
+                    <button class="qr-tab" data-target="tg-chan">TG Chan</button>
+                </div>
+
+                <div class="qr-container" id="qrcode-box">
+                    <!-- QR Code generated here via JS -->
+                </div>
+                
+                <p class="qr-desc" id="qr-desc-text">Scan to join the WhatsApp Group</p>
+            </div>
+        </section>
+
+        <!-- Rules -->
+        <section class="glass-section fade-in delay-4">
+            <span class="section-tag">Guidelines</span>
+            <h2 class="section-title">Keep It Clean</h2>
+            
+            <div class="rules-list">
+                <div class="rule-item">
+                    <h4>Share Freely</h4>
+                    <p>Normal conversations, ideas and discussions are welcome.</p>
+                </div>
+                <div class="rule-item">
+                    <h4>Keep It Clean</h4>
+                    <p>No obscene, vulgar, sexually inappropriate or abusive content.</p>
+                </div>
+                <div class="rule-item">
+                    <h4>Respect People</h4>
+                    <p>Different opinions are welcome. Personal abuse is not.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Share / Actions -->
+        <section class="glass-section fade-in delay-4">
+            <h2 class="section-title text-gradient" style="text-align: center; margin-bottom: 0.5rem;">Spread the Word</h2>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                Help us build the community. Share this page with your friends.
+            </p>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="shareCommunity()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    Share Page
+                </button>
+                <button class="btn btn-secondary" onclick="copyPageLink()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy Link
+                </button>
+                <a href="https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4" class="btn btn-full" target="_blank" rel="noopener">
+                    Join Main WhatsApp Group
+                </a>
+            </div>
+        </section>
+        
+        <footer class="footer">
+            <div class="footer-logo">
+                <img src="https://lalanview.vercel.app/assets/whatsApp/group1_profilephoto.png" alt="Logo">
+                ENGINEER UNFILTERED
+            </div>
+            <p>© 2026 Engineer Unfiltered.<br>An open digital community.</p>
+            <div><span class="manager-badge">Managed by Lalan Kumar</span></div>
+        </footer>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span id="toast-message">Link Copied!</span>
+    </div>
+
+    <script>
+        // --- URLs ---
+        const links = {
+            'wa-group': 'https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4',
+            'tg-group': 'https://t.me/+UFL3YEnqKYI5MTll',
+            'wa-chan': 'https://whatsapp.com/channel/0029VbDpocB1SWt2Q4T8hG0E',
+            'tg-chan': 'https://t.me/engineerunfiltered'
+        };
+
+        const descs = {
+            'wa-group': 'Scan to join the WhatsApp Group',
+            'tg-group': 'Scan to join the Telegram Group',
+            'wa-chan': 'Scan to view the WhatsApp Channel',
+            'tg-chan': 'Scan to view the Telegram Channel'
+        };
+
+        // --- QR Code Logic ---
+        let currentQRCode = null;
+
+        function generateQR(type) {
+            const container = document.getElementById('qrcode-box');
+            container.innerHTML = ''; // Clear previous
+            
+            const url = links[type];
+            
+            currentQRCode = new QRCode(container, {
+                text: url,
+                width: 200,
+                height: 200,
+                colorDark : "#050505",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+            
+            document.getElementById('qr-desc-text').innerText = descs[type];
+        }
+
+        // Initialize first QR code
+        window.addEventListener('load', () => {
+            generateQR('wa-group');
+        });
+
+        // Tab Switching Logic
+        const tabs = document.querySelectorAll('.qr-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                // Update Active Class
+                tabs.forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Generate new QR
+                const targetType = e.target.getAttribute('data-target');
+                generateQR(targetType);
+            });
+        });
+
+        // --- Toast Logic ---
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- Copy Link Logic ---
+        async function copyPageLink() {
+            const currentUrl = window.location.href;
+            try {
+                await navigator.clipboard.writeText(currentUrl);
+                showToast('Page Link Copied!');
+            } catch (err) {
+                // Fallback
+                const textArea = document.createElement("textarea");
+                textArea.value = currentUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Page Link Copied!');
+            }
+        }
+
+        // --- Web Share API Logic ---
+        async function shareCommunity() {
+            const shareData = {
+                title: 'Engineer Unfiltered',
+                text: 'Join Engineer Unfiltered! Get important notes via Telegram and enjoy everyday content & chat on WhatsApp.',
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.error('Error sharing:', err);
+                    }
+                }
+            } else {
+                copyPageLink();
+            }
+        }
+    </script>
+</body>
+</html>
