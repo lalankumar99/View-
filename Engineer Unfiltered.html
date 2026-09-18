@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineer Unfiltered | WhatsApp Community</title>
+    <meta name="description" content="Engineer Unfiltered is an open WhatsApp community for conversations, engineering, ideas, experiences and connection. Talk • Share • Connect.">
+    <meta name="theme-color" content="#0f172a">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Engineer Unfiltered | WhatsApp Community">
+    <meta property="og:description" content="An open WhatsApp community where you can share what is on your mind, talk with others, exchange ideas and simply be yourself.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://lalanview.vercel.app/assets/whatsApp/group1_profilephoto.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Colors */
+            --bg-base: #020617; /* Very dark slate */
+            --bg-surface: #0f172a; /* Dark slate */
+            --bg-surface-light: rgba(30, 41, 59, 0.7); /* Slate 800 with transparency for glass */
+            
+            --primary: #10b981; /* WhatsApp-ish Emerald Green */
+            --primary-hover: #059669;
+            --primary-glow: rgba(16, 185, 129, 0.2);
+            
+            --accent: #3b82f6; /* Blue for technical vibe */
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --border: rgba(255, 255, 255, 0.08);
+            
+            /* Typography */
+            --font-main: 'Inter', system-ui, sans-serif;
+            
+            /* Sizing */
+            --max-w: 1200px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            
+            /* Transitions */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            /* Subtle background gradient */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.03), transparent 25%);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-gradient-primary {
+            background: linear-gradient(135deg, var(--primary), #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            outline: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #020617; /* Dark text for contrast */
+            box-shadow: 0 4px 14px 0 var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .btn-icon {
+            padding: 0.75rem;
+            border-radius: var(--radius-full);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-icon:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4.5rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-img-header {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--primary);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-base);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 99;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav .nav-link {
+            font-size: 1.5rem;
+            color: var(--text-main);
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 5rem; /* Account for header */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero-tagline {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-desc {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        /* Abstract Visual Element for Hero Right */
+        .hero-visual {
+            position: relative;
+            height: 100%;
+            min-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .visual-logo-container {
+            position: relative;
+            z-index: 10;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.3);
+            animation: floatLogo 6s ease-in-out infinite;
+        }
+
+        .visual-logo-container img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-base);
+        }
+
+        .visual-circle {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: absolute;
+            animation: pulse 4s infinite alternate;
+        }
+
+        .visual-circle:nth-child(2) {
+            width: 450px;
+            height: 450px;
+            border: 1px dashed rgba(16, 185, 129, 0.2);
+            animation: spin 30s linear infinite;
+        }
+        
+        .visual-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            position: absolute;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            z-index: 15;
+        }
+
+        .vc-1 { top: 10%; left: 0%; transform: rotate(-5deg); animation: float 6s ease-in-out infinite; }
+        .vc-2 { bottom: 10%; right: 0%; transform: rotate(5deg); animation: float 8s ease-in-out infinite alternate; }
+
+        .vc-icon {
+            width: 40px; height: 40px;
+            background: rgba(16,185,129,0.1);
+            color: var(--primary);
+            border-radius: 10px;
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 1rem;
+        }
+        .vc-line { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); margin-bottom: 8px;}
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem auto;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 3vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+        }
+
+        /* About Section */
+        .about-text {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-text strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Features/Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            background: var(--bg-surface-light);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-desc {
+            color: var(--text-muted);
+            font-size: 0.9375rem;
+        }
+
+        /* Philosophy Section */
+        .philosophy-section {
+            background: linear-gradient(180deg, var(--bg-base) 0%, #064e3b 50%, var(--bg-base) 100%);
+            text-align: center;
+            padding: 8rem 0;
+            position: relative;
+        }
+        
+        .philosophy-section::after {
+            content: ''; position: absolute; inset: 0;
+            background: rgba(2, 6, 23, 0.85); /* Overlay to darken */
+        }
+
+        .philosophy-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .philosophy-main {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 2rem;
+            color: #fff;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .philosophy-sub {
+            font-size: clamp(1.25rem, 2vw, 1.5rem);
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .philosophy-highlight {
+            display: block;
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--bg-surface) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-banner .title {
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 800;
+            margin: 1rem 0;
+            line-height: 1;
+        }
+
+        /* QR Section */
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: var(--bg-surface);
+            padding: 4rem 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+        }
+
+        .qr-card {
+            background: #fff; /* White background needed for scannability */
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin: 2rem 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            width: 250px;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Guidelines */
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .guideline-item {
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .guideline-item:hover {
+            border-left-color: var(--primary);
+        }
+
+        .guideline-num {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .guideline-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .guideline-desc {
+            color: var(--text-muted);
+            font-size: 0.9375rem;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 4rem 0 2rem 0;
+            text-align: center;
+            background: var(--bg-surface);
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .footer-logo img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .footer-tagline {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        .footer-bottom {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 2rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.show {
+            bottom: 30px;
+        }
+
+        .toast-icon {
+            color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.05); opacity: 0.8; }
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(-3deg); }
+            100% { transform: translateY(0px) rotate(-5deg); }
+        }
+        @keyframes floatLogo {
+            0% { transform: translateY(0px); box-shadow: 0 0 40px rgba(16, 185, 129, 0.3); }
+            50% { transform: translateY(-20px); box-shadow: 0 20px 50px rgba(16, 185, 129, 0.5); }
+            100% { transform: translateY(0px); box-shadow: 0 0 40px rgba(16, 185, 129, 0.3); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+            .hero-content { margin: 0 auto; }
+            .hero-actions { justify-content: center; }
+            .hero-visual { display: none; } /* Hide complex visual on tablet/mobile for focus */
+            .hero { padding-top: 8rem; min-height: auto; padding-bottom: 4rem;}
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .header .btn-primary { display: none; }
+            .mobile-menu-btn { display: block; }
+            section { padding: 4rem 0; }
+            .promo-banner { padding: 3rem 1.5rem; }
+            .btn { width: 100%; justify-content: center; }
+            .hero-actions { flex-direction: column; width: 100%; }
+            .hero-actions .btn-icon { width: 100%; }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-delay: -1ms !important;
+                animation-duration: 1ms !important;
+                animation-iteration-count: 1 !important;
+                background-attachment: initial !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0s !important;
+                transition-delay: 0s !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="https://lalanview.vercel.app/assets/whatsApp/group1_profilephoto.png" alt="Engineer Unfiltered Logo" class="logo-img-header">
+                ENGINEER<span>UNFILTERED</span>
+            </a>
+            
+            <nav class="nav-links">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#topics" class="nav-link">Community</a>
+                <a href="#guidelines" class="nav-link">Guidelines</a>
+            </nav>
+
+            <a href="https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.875rem;">
+                Join Group
+            </a>
+
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </div>
+    </header>
+
+    <nav class="mobile-nav" id="mobile-nav">
+        <img src="https://lalanview.vercel.app/assets/whatsApp/group1_profilephoto.png" alt="Logo" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1rem; border: 2px solid var(--primary);">
+        <a href="#about" class="nav-link mobile-link">About</a>
+        <a href="#topics" class="nav-link mobile-link">Community</a>
+        <a href="#guidelines" class="nav-link mobile-link">Guidelines</a>
+        <a href="https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">
+            Join WhatsApp Group
+        </a>
+    </nav>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <span class="badge">Official Community</span>
+                    <h1 class="hero-title">ENGINEER <br><span class="text-gradient">UNFILTERED</span></h1>
+                    <p class="hero-tagline">Talk • Share • Connect</p>
+                    
+                    <p class="hero-desc">
+                        An open WhatsApp community where you can share what is on your mind, talk with others, exchange ideas and simply be yourself.
+                    </p>
+                    <p class="hero-desc" style="font-size: 1rem;">
+                        This community is not built around unnecessary restrictions. It is built for genuine conversations, engineering discussions, everyday thoughts, ideas, questions and connections.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                            Join WhatsApp Group
+                        </a>
+                        <a href="#qr-section" class="btn btn-secondary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><rect x="7" y="7" width="3" height="3"></rect><rect x="14" y="7" width="3" height="3"></rect><rect x="7" y="14" width="3" height="3"></rect><rect x="14" y="14" width="3" height="3"></rect></svg>
+                            Scan QR
+                        </a>
+                        <button class="btn-icon" id="share-btn" aria-label="Share Group" title="Share Group">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="visual-circle"></div>
+                    <div class="visual-circle"></div>
+                    
+                    <div class="visual-logo-container">
+                        <img src="https://lalanview.vercel.app/assets/whatsApp/group1_profilephoto.png" alt="Engineer Unfiltered Graphic">
+                    </div>
+
+                    <div class="visual-card vc-1">
+                        <div class="vc-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        </div>
+                        <div class="vc-line" style="width: 120px;"></div>
+                        <div class="vc-line" style="width: 80px;"></div>
+                    </div>
+                    
+                    <div class="visual-card vc-2">
+                        <div class="vc-icon" style="color: var(--accent); background: rgba(59,130,246,0.1);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        </div>
+                        <div class="vc-line" style="width: 100px;"></div>
+                        <div class="vc-line" style="width: 140px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" style="background: rgba(255,255,255,0.01);">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">More Than Just a Group</h2>
+                </div>
+                <p class="about-text">
+                    <strong>Engineer Unfiltered</strong> is an open community created for conversations, ideas and connections. We believe in providing a space where members can naturally talk about engineering, education, college life, projects, career, ideas, questions, experiences, everyday life, and share useful information.
+                </p>
+            </div>
+        </section>
+
+        <section id="topics">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                        </div>
+                        <h3 class="feature-title">Speak Your Mind</h3>
+                        <p class="feature-desc">Share your thoughts, ideas, experiences and everyday conversations freely.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="m17 5-5-3-5 3"></path><path d="m7 19 5 3 5-3"></path><path d="M2 12h20"></path><path d="m5 7-3 5 3 5"></path><path d="m19 7 3 5-3 5"></path></svg>
+                        </div>
+                        <h3 class="feature-title">Engineering & Ideas</h3>
+                        <p class="feature-desc">Discuss engineering, technology, projects, learning and practical experiences.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </div>
+                        <h3 class="feature-title">Talk About Life</h3>
+                        <p class="feature-desc">College, career, experiences, questions, ideas and the things you simply want to talk about.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 9.8a7.1 7.1 0 0 0-9.4 0"></path><path d="M16 6a11 11 0 0 0-15 0"></path><path d="M10.4 13.6a3.1 3.1 0 0 0-4.8 0"></path><circle cx="8" cy="18" r="2"></circle><circle cx="21" cy="18" r="2"></circle><path d="M12 18h5"></path></svg>
+                        </div>
+                        <h3 class="feature-title">Connect</h3>
+                        <p class="feature-desc">Meet people, exchange perspectives and keep the conversation going.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="philosophy-section">
+            <div class="container philosophy-content">
+                <h2 class="philosophy-main">Say What's On Your Mind.</h2>
+                <p class="philosophy-sub">
+                    You don't need a complicated reason to start a conversation. Share an idea, ask something, tell a story, discuss a problem or simply talk.
+                </p>
+                <span class="philosophy-highlight">Normal conversation is welcome.</span>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <div class="promo-banner">
+                    <span class="badge">Open Community</span>
+                    <h2 class="title text-gradient">TALK.<br>SHARE.<br>CONNECT.</h2>
+                    <p class="section-desc" style="color: var(--text-main); max-width: 600px; margin: 1.5rem auto;">
+                        An open community for conversations, ideas, engineering and everyday thoughts.
+                    </p>
+                    <a href="https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">
+                        Join the Community
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="qr-section">
+            <div class="container">
+                <div class="qr-section">
+                    <h2 class="section-title">Scan. Join. Connect.</h2>
+                    <p class="section-desc">Scan the QR code with your phone camera to open the WhatsApp community.</p>
+                    
+                    <div class="qr-card">
+                        <img src="https://lalanview.vercel.app/assets/whatsApp/group1.png" alt="Engineer Unfiltered WhatsApp Group QR Code">
+                    </div>
+                    
+                    <a href="https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                        Join WhatsApp Group
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="guidelines">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Keep It Clean. Keep It Respectful.</h2>
+                    <p class="section-desc">There are no unnecessary restrictions on normal conversation. The group exists so people can talk and share.</p>
+                </div>
+
+                <div class="guidelines-grid">
+                    <div class="guideline-item">
+                        <div class="guideline-num">01</div>
+                        <h3 class="guideline-title">Share Freely</h3>
+                        <p class="guideline-desc">Talk about what is on your mind. Normal conversations, ideas and discussions are welcome.</p>
+                    </div>
+                    <div class="guideline-item">
+                        <div class="guideline-num">02</div>
+                        <h3 class="guideline-title">Keep It Clean</h3>
+                        <p class="guideline-desc">Do not send dirty, obscene, vulgar, sexually inappropriate or otherwise inappropriate content.</p>
+                    </div>
+                    <div class="guideline-item">
+                        <div class="guideline-num">03</div>
+                        <h3 class="guideline-title">Respect People</h3>
+                        <p class="guideline-desc">Different opinions are welcome. Personal abuse, harassment and intentional disrespect are not.</p>
+                    </div>
+                    <div class="guideline-item">
+                        <div class="guideline-num">04</div>
+                        <h3 class="guideline-title">Keep It Comfortable</h3>
+                        <p class="guideline-desc">Help maintain a friendly environment where people can participate comfortably.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container" style="text-align: center; max-width: 600px;">
+                <h2 class="section-title">Your Conversation Starts Here.</h2>
+                <p class="section-desc" style="margin-bottom: 2.5rem;">
+                    Have something to say? An idea to share? A question to ask? Join the community.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                        Join Engineer Unfiltered
+                    </a>
+                    <button class="btn btn-secondary" id="copy-link-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Copy Group Link
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="https://lalanview.vercel.app/assets/whatsApp/group1_profilephoto.png" alt="Logo">
+                ENGINEER<span style="color: var(--primary);">UNFILTERED</span>
+            </div>
+            <div class="footer-tagline">Talk • Share • Connect</div>
+            <div class="footer-bottom">
+                © 2026 Engineer Unfiltered. A WhatsApp community.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span id="toast-message">Link copied to clipboard!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const groupUrl = 'https://chat.whatsapp.com/BbzAqkCZ94v0QiFvz3Le2q?s=cl&p=a&mlu=4&ilr=4';
+            
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileNav = document.getElementById('mobile-nav');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            
+            function toggleMenu() {
+                mobileNav.classList.toggle('active');
+                const isActive = mobileNav.classList.contains('active');
+                mobileMenuBtn.innerHTML = isActive 
+                    ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'
+                    : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+            // Toast Notification System
+            const toast = document.getElementById('toast');
+            let toastTimeout;
+
+            function showToast(message) {
+                const toastMsg = document.getElementById('toast-message');
+                if(toastMsg) toastMsg.textContent = message;
+                
+                toast.classList.add('show');
+                
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // Copy Link Functionality
+            const copyBtn = document.getElementById('copy-link-btn');
+            
+            copyBtn.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(groupUrl);
+                    showToast('Group link copied successfully!');
+                } catch (err) {
+                    // Fallback for older browsers
+                    const textArea = document.createElement("textarea");
+                    textArea.value = groupUrl;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showToast('Group link copied successfully!');
+                    } catch (e) {
+                        showToast('Failed to copy link.');
+                    }
+                    document.body.removeChild(textArea);
+                }
+            });
+
+            // Share API Functionality
+            const shareBtn = document.getElementById('share-btn');
+            
+            shareBtn.addEventListener('click', async () => {
+                const shareData = {
+                    title: 'Engineer Unfiltered',
+                    text: 'Join Engineer Unfiltered — an open WhatsApp community for talk, ideas and connection.',
+                    url: groupUrl
+                };
+
+                try {
+                    if (navigator.share) {
+                        await navigator.share(shareData);
+                    } else {
+                        // Fallback to copy if Web Share API is not supported
+                        await navigator.clipboard.writeText(groupUrl);
+                        showToast('Link copied! Share API not supported on this browser.');
+                    }
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.error('Error sharing:', err);
+                    }
+                }
+            });
+
+            // Subtle Header Background on Scroll
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.style.background = 'rgba(2, 6, 23, 0.9)';
+                    header.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.background = 'rgba(2, 6, 23, 0.7)';
+                    header.style.boxShadow = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
