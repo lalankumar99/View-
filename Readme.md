@@ -6,7 +6,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live_Website-blue?style=for-the-badge&logo=vercel)](https://lalanview.vercel.app/)
 [![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)]()
-[![Made with Love](https://img.shields.io/badge/Made_with-❤️-red?style=for-the-badge)]()
+[![Made with Love](https://polytechnic-hub.ai.studio)]()
 
 *Welcome to the official repository for **Lalan View**. Explore the live site to see it in action!*
 
