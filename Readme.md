@@ -36,7 +36,7 @@ Whether it serves as a portfolio, a blog, or a creative showcase, this project h
 
 ## 🔗 Links
 
-- **Live Website:** [https://lalanview.vercel.app/](https://lalanview.vercel.app/)
+- **Live Website:** [https://lalanview.vercel.app/](https://polytechnic-hub.ai.studio)
 
 - **WhatsApp Channel:** [https://lalanview.vercel.app/assets/whatsapp.jpg]
 
